@@ -1,6 +1,11 @@
 # Digital Picture Frame with Telegram Bot
 #### This Project is to controll a digital Picture Frame with a Telegram Bot
 
+## Table of contents
+1. [Setup Raspberry Pi](#setup-raspberry-pi)  
+ 1.1. [Install Raspbian Jessie](#install-raspbian-jessie)  
+ 1.2 [Autostart Chromium on boot](#autostart-chromium-on-boot)
+
 ## Idea 
 * Digital Picture Frame is connected via HDMI to a Raspberry Pi
 * The Raspberry Pi with Raspbian starts on Boot a fullscreen webbrowser 
@@ -42,7 +47,7 @@ After the first boot, you can connect to the Raspberry Pi via a ssh client like 
 Password: "raspberry"
 
 #### 1.1.5. Update   
-Start the terminal and update your system:
+Start the terminal and update your system: 
 ```
 sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo reboot
 ```
@@ -50,26 +55,26 @@ sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y &
 ### 1.2 Autostart Chromium on boot
 
 #### 1.2.1 Install unclutter 
-Install unclutter for hidding the cursor from the screen
-	```
-	sudo apt-get install unclutter
-	```
+Install unclutter for hidding the cursor from the screen 
+```
+sudo apt-get install unclutter
+```
 
 #### 1.2.2 Update autostart file
-When the GUI starts up chromium needs to boot in kiosk-mode and open the webpage. Because of that we edit the autostart file:
-	```
-	nano ~/.config/lxsession/LXDE-pi/autostart
-	```
+When the GUI starts up chromium needs to boot in kiosk-mode and open the webpage. Because of that we edit the autostart file: 
+```
+nano ~/.config/lxsession/LXDE-pi/autostart
+```
 
-	The autostart files needs to look like this:
-	```
-    @lxpanel --profile LXDE-pi
-	@pcmanfm --desktop --profile LXDE-pi
-	@xscreensaver -no-splash
-	@xset s off
-	@xset -dpms
-	@xset s noblank
-	@sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium Default/Preferences
-	@chromium-browser --noerrdialogs --kiosk chrome://newtab/ --incognito --disable-translate
-	@unclutter -display :0 -noevents -grab
-	```
+The autostart files needs to look like this:
+```
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@xset s off
+@xset -dpms
+@xset s noblank
+@sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium Default/Preferences
+@chromium-browser --noerrdialogs --kiosk chrome://newtab/ --incognito --disable-translate
+@unclutter -display :0 -noevents -grab
+```
