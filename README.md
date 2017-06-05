@@ -2,9 +2,9 @@
 #### This Project is to controll a digital Picture Frame with a Telegram Bot
 
 ## Table of contents
-1. [Setup Raspberry Pi](#setup-raspberry-pi)  
- 1.1. [Install Raspbian Jessie](#install-raspbian-jessie)  
- 1.2 [Autostart Chromium on boot](#autostart-chromium-on-boot)
+1. [Setup Raspberry Pi](#1-setup-raspberry-pi)  
+ 1.1. [Install Raspbian Jessie](#11-install-raspbian-jessie)  
+ 1.2 [Autostart Chromium on boot](#12-autostart-chromium-on-boot)
 
 ## Idea 
 * Digital Picture Frame is connected via HDMI to a Raspberry Pi
@@ -52,16 +52,32 @@ Start the terminal and update your system:
 sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo reboot
 ```
 
-### 1.2 Autostart Chromium on boot
+### 1.2 Autostart Browser on boot
 
-#### 1.2.1 Install unclutter 
-Install unclutter for hidding the cursor from the screen 
+#### 1.2.1 Choose a browser
+With a sample slide show, I tested different browsers on my Raspberry Pi Zero W:  
+* Chromium: **22,7s**
+* Epiphany: **8,1s**
+* Firefox:  **30,1s**
+* Midori:   **5,3s**
+
+I chose the **Midori browser** because it was the fastest in my test scenario and was the easiest to configure for my project.
+
+#### 1.2.2 Install Browser
+Install Midori Browser and unclutter (for hidding cursor from screen)
 ```
-sudo apt-get install unclutter
+sudo apt-get install midori unclutter
 ```
 
-#### 1.2.2 Update autostart file
-When the GUI starts up chromium needs to boot in kiosk-mode and open the webpage. Because of that we edit the autostart file: 
+#### 1.2.3 Update browser settings
+
+```
+nano ~/.config/midori/config
+```
+
+
+#### 1.2.4 Update autostart file
+Edit the autostart file:
 ```
 nano ~/.config/lxsession/LXDE-pi/autostart
 ```
@@ -74,7 +90,6 @@ The autostart files needs to look like this:
 @xset s off
 @xset -dpms
 @xset s noblank
-@sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium Default/Preferences
-@chromium-browser --noerrdialogs --kiosk chrome://newtab/ --incognito --disable-translate
+@midori -e Fullscreen ??
 @unclutter -display :0 -noevents -grab
 ```
