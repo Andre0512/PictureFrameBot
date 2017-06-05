@@ -44,4 +44,12 @@ function carousel() {
 f.write(message)
 f.close()
 
-webbrowser.get('windows-default').open(test_file)
+# Testing Browser speed
+#web = webbrowser.get('/usr/bin/firefox %s') 30,1s
+#web = webbrowser.get('chromium-browser') 22,7s
+#web = webbrowser.get('/usr/bin/epiphany %s') 8,1s
+#web = webbrowser.get('/usr/bin/midori %s') 5,3s
+web = webbrowser.get('/usr/bin/midori %s')
+
+web.open(test_file, new=0)
+web.open(test_file, new=0)
