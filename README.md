@@ -4,7 +4,8 @@
 ## Table of contents
 1. [Setup Raspberry Pi](#1-setup-raspberry-pi)  
  1.1. [Install Raspbian Jessie](#11-install-raspbian-jessie)  
- 1.2 [Autostart Chromium on boot](#12-autostart-chromium-on-boot)
+ 1.2 [Checkout this Repository](#12-checkout-this-repository)  
+ 1.3 [Autostart Chromium on boot](#12-autostart-midori-on-boot)  
 
 ## Idea 
 * Digital Picture Frame is connected via HDMI to a Raspberry Pi
@@ -52,10 +53,16 @@ Start the terminal and update your system:
 sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo reboot
 ```
 
-### 1.2 Autostart Midori on boot
+### 1.2 Checkout this Repository
+```
+cd ~
+git clone https://local.abasche.de/git/Andre/Picture-Frame-Bot
+```
+
+### 1.3 Autostart Midori on boot
 
 #### 1.2.1 Why Midori?
-With a sample slide show, I tested different browsers on my Raspberry Pi Zero W:  
+With a sample slide show, I tested the startup time with different browsers on my Raspberry Pi Zero W:  
 * Chromium: **22,7s**
 * Epiphany: **8,1s**
 * Firefox:  **30,1s**
@@ -64,16 +71,17 @@ With a sample slide show, I tested different browsers on my Raspberry Pi Zero W:
 I chose the **Midori browser** because it was the fastest in my test scenario and was the easiest to configure for my project.
 
 #### 1.2.2 Install Midori
-Install Midori Browser and unclutter (for hidding cursor from screen)
+Install Midori Browser, matchbox as running environment and unclutter for hidding cursor from screen:
 ```
-sudo apt-get install midori unclutter
+sudo apt-get install midori unclutter matchbox
 ```
 
 #### 1.2.3 Update browser settings
-
+By default, Midori open pages on new tab. We need to change the following file:
 ```
 nano ~/.config/midori/config
 ```
+The following text must be added:
 
 #### 1.2.4 Start at boot
 Autostart Midori at boot with Cron:  
