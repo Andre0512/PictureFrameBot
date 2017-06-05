@@ -78,5 +78,6 @@ nano ~/.config/midori/config
 #### 1.2.4 Start at boot
 Autostart Midori at boot with Cron:  
 ```
-(crontab -l | echo "@reboot xinit /home/pi/Picture-Frame-Bot/start_midori.sh &") | sudo crontab -
+(crontab -l && echo "@reboot xinit /home/pi/Picture-Frame-Bot/start_midori.sh &") | sudo crontab -
+
 ```
