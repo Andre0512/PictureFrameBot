@@ -52,9 +52,9 @@ Start the terminal and update your system:
 sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo reboot
 ```
 
-### 1.2 Autostart Browser on boot
+### 1.2 Autostart Midori on boot
 
-#### 1.2.1 Choose a browser
+#### 1.2.1 Why Midori?
 With a sample slide show, I tested different browsers on my Raspberry Pi Zero W:  
 * Chromium: **22,7s**
 * Epiphany: **8,1s**
@@ -63,7 +63,7 @@ With a sample slide show, I tested different browsers on my Raspberry Pi Zero W:
 
 I chose the **Midori browser** because it was the fastest in my test scenario and was the easiest to configure for my project.
 
-#### 1.2.2 Install Browser
+#### 1.2.2 Install Midori
 Install Midori Browser and unclutter (for hidding cursor from screen)
 ```
 sudo apt-get install midori unclutter
@@ -75,21 +75,8 @@ sudo apt-get install midori unclutter
 nano ~/.config/midori/config
 ```
 
-
-#### 1.2.4 Update autostart file
-Edit the autostart file:
+#### 1.2.4 Start at boot
+Autostart Midori at boot with Cron:  
 ```
-nano ~/.config/lxsession/LXDE-pi/autostart
-```
-
-The autostart files needs to look like this:
-```
-@lxpanel --profile LXDE-pi
-@pcmanfm --desktop --profile LXDE-pi
-@xscreensaver -no-splash
-@xset s off
-@xset -dpms
-@xset s noblank
-@midori -e Fullscreen ??
-@unclutter -display :0 -noevents -grab
+(crontab -l | echo "@reboot xinit /home/pi/Picture-Frame-Bot/start_midori.sh &") | sudo crontab -
 ```
