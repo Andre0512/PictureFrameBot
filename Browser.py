@@ -1,4 +1,7 @@
 import webbrowser
+import subprocess
+import os
+
 
 test_file = 'test.html'
 
@@ -44,8 +47,16 @@ function carousel() {
 f.write(message)
 f.close()
 
+fscreen = "./Fullscreen"
+first = False
+if not os.path.isfile(fscreen):
+    first = True
+    os.environ["DISPLAY"] = ":0"
+
 webbrowser.register('midori', None, webbrowser.BackgroundBrowser('/usr/bin/midori'))
 browser = webbrowser.get('midori')
-args = ['-e','Fullscreen','-a','%s']
-browser.args = args
 browser.open(test_file)
+if first:
+    subprocess.call('xte "key F11" -x:0', shell=True)
+    open(fscreen,'a').close()
+
