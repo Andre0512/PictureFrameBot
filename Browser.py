@@ -5,7 +5,7 @@
 import webbrowser
 import subprocess
 import os
-
+import time
 
 def insert_images(html):
     image_list = []
@@ -44,8 +44,9 @@ def open_linux(html_file):
     browser = webbrowser.get('midori')
     browser.open(html_file)
     if first:
-        subprocess.call('xte "key F11" -x:0', shell=True)
         open(fscreen, 'a').close()
+        time.sleep(5)
+        subprocess.call('xte "key F11" -x:0', shell=True)
 
 
 def main():
