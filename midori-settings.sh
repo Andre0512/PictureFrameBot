@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+destdir="/home/pi/.config/midori/config"
+
 setting=$(cat << 'EOF' 
 [settings]
 default-encoding=ISO-8859-1
@@ -17,4 +20,6 @@ enable-html5-database=true
 user-agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X; de-de) AppleWebKit/535+ (KHTML, like Gecko) Version/5.0 Safari/535.22+ Midori/0.4
 EOF
 )
-echo "$setting"
+
+echo "$setting" > "$destdir"
+

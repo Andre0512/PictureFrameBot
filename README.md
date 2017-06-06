@@ -7,11 +7,11 @@
  1.2. [Implemented so far](#12-implemented-so-far)  
  1.3. [Todo next](#13-todo-next)  
  1.4. [Ideas for future extensions](#14-ideas-for-future-extensions)  
-2. [Setup Raspberry Pi](#1-setup-raspberry-pi)  
- 2.1. [Install Raspbian Jessie](#11-install-raspbian-jessie)  
- 2.2. [Update Rasperry Pi configurations](#12-update-rasperry-pi-configurations)  
- 2.3. [Checkout this repository](#12-checkout-this-repository)  
- 2.4. [Autostart Midori on boot](#12-autostart-midori-on-boot)  
+2. [Setup Raspberry Pi](#2-setup-raspberry-pi)  
+ 2.1. [Install Raspbian Jessie](#21-install-raspbian-jessie)  
+ 2.2. [Update Rasperry Pi configurations](#22-update-rasperry-pi-configurations)  
+ 2.3. [Checkout this repository](#23-checkout-this-repository)  
+ 2.4. [Autostart Midori on boot](#24-autostart-midori-on-boot)  
 
 ## 1. Idea 
 
@@ -112,12 +112,11 @@ Install Midori Browser, matchbox as running environment and unclutter for hiddin
 sudo apt-get install midori unclutter matchbox
 ```
 
-#### 2.4.3 Update browser settings
-By default, Midori open pages on new tab. We need to change the following file:
+#### 2.4.3 Update browser setting
+Execute this script to change the Midori settings:
 ```
-nano ~/.config/midori/config
+bash /home/pi/Picture-Frame-Bot/midori-settings.sh
 ```
-The following text must be added:
 
 #### 2.4.4 Start at boot
 Autostart Midori at boot with Cron:  
