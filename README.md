@@ -4,8 +4,9 @@
 ## Table of contents
 1. [Setup Raspberry Pi](#1-setup-raspberry-pi)  
  1.1. [Install Raspbian Jessie](#11-install-raspbian-jessie)  
- 1.2 [Checkout this Repository](#12-checkout-this-repository)  
- 1.3 [Autostart Chromium on boot](#12-autostart-midori-on-boot)  
+ 1.2. [Update Rasperry Pi configurations](#12-update-rasperry-pi-configurations)  
+ 1.3. [Checkout this repository](#12-checkout-this-repository)  
+ 1.4. [Autostart Midori on boot](#12-autostart-midori-on-boot)  
 
 ## Idea 
 * Digital Picture Frame is connected via HDMI to a Raspberry Pi
@@ -53,13 +54,22 @@ Start the terminal and update your system:
 sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo reboot
 ```
 
-### 1.2 Checkout this Repository
+### 1.2 Update Rasperry Pi configurations
+Enter the following command to change the Raspberry Pi settings:
+```
+sudo raspi-config
+```
+
+1. Navigate to **3 Boot Options**, choose **B1 Desktop / CLI** and then choose **B2 Console Autologin**
+2. If you have a black frame on your display, navigate to **7 Advanced Options**, choose **A2 Overscan** and choose **yes**
+
+### 1.3 Checkout this repository
 ```
 cd ~
 git clone https://local.abasche.de/git/Andre/Picture-Frame-Bot
 ```
 
-### 1.3 Autostart Midori on boot
+### 1.4 Autostart Midori on boot
 
 #### 1.2.1 Why Midori?
 With a sample slide show, I tested the startup time with different browsers on my Raspberry Pi Zero W:  
@@ -68,7 +78,7 @@ With a sample slide show, I tested the startup time with different browsers on m
 * Firefox:  **30,1s**
 * Midori:   **5,3s**
 
-I chose the **Midori browser** because it was the fastest in my test scenario and was the easiest to configure for my project.
+I choose the **Midori browser** because it was the fastest in my test scenario and was the easiest to configure for my project.
 
 #### 1.2.2 Install Midori
 Install Midori Browser, matchbox as running environment and unclutter for hidding cursor from screen:
