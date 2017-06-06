@@ -6,4 +6,4 @@ xset s noblank
 matchbox-window-manager &
 unclutter &
 midori -e Fullscreen 
-rm /home/pi/Picture-Frame-Bot/Fullscreen
+rm -f /home/pi/Picture-Frame-Bot/Fullscreen
