@@ -21,6 +21,7 @@
 * The Raspberry Pi with Raspbian starts on Boot a fullscreen webbrowser 
 * A chatbot based on python can be sent pictures and more
 * The python script generates a html page with the pictures
+* A slideshow of the images is played with javascript
 
 ### 1.2. Implemented so far
 
@@ -87,12 +88,12 @@ sudo raspi-config
 ```
 
 1. Navigate to **3 Boot Options**, choose **B1 Desktop / CLI** and then choose **B2 Console Autologin**
-2. If you have a black frame on your display, navigate to **7 Advanced Options**, choose **A2 Overscan** and choose **yes**
+2. If you have a black frame on your display, navigate to **7 Advanced Options**, choose **A2 Overscan** and choose **no**
 
 ### 2.3 Checkout this repository
 ```
 cd ~
-git clone https://local.abasche.de/git/Andre/Picture-Frame-Bot
+git clone https://github.com/Andre0512/PictureFrameBot
 ```
 
 ### 2.4 Autostart Midori on boot
@@ -115,12 +116,12 @@ sudo apt-get install midori unclutter matchbox
 #### 2.4.3 Update browser setting
 Execute this script to change the Midori settings:
 ```
-bash /home/pi/Picture-Frame-Bot/midori-settings.sh
+bash /home/pi/PictureFrameBot/midori-settings.sh
 ```
 
 #### 2.4.4 Start at boot
 Autostart Midori at boot with Cron:  
 ```
-(crontab -l && echo "@reboot xinit /home/pi/Picture-Frame-Bot/start_midori.sh &") | sudo crontab -
+(crontab -l && echo "@reboot xinit /home/pi/PictureFrameBot/start_midori.sh &") | sudo crontab -
 
 ```
