@@ -1,0 +1,3 @@
+telegram:
+    token: <BOT-TOKEN>
+    ownerid: <ID-OF-ADMIN-USER>
