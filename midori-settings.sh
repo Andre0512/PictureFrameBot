@@ -1,9 +1,10 @@
 #!/bin/bash
 
 
-destdir="/home/pi/.config/midori/config"
+pidir="/home/pi/.config/midori/config"
+rootdir="/root/.config/midori/config"
 
-setting=$(cat << 'EOF' 
+setting=$(cat << 'EOF'
 [settings]
 default-encoding=ISO-8859-1
 enable-site-specific-quirks=true
@@ -21,5 +22,7 @@ user-agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X; de-de) AppleWebKit/535+ (K
 EOF
 )
 
-echo "$setting" > "$destdir"
 
+mkdir -p /home/pi/.config/midori
+echo "$setting" > "$pidir"
+echo "$setting" > "$rootdir"

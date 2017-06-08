@@ -110,7 +110,7 @@ I choose the **Midori browser** because it was the fastest in my test scenario a
 #### 2.4.2 Install Midori
 Install Midori Browser, matchbox as running environment and unclutter for hidding cursor from screen:
 ```
-sudo apt-get install midori unclutter matchbox
+sudo apt-get install midori unclutter matchbox xautomation
 ```
 
 #### 2.4.3 Update browser setting
@@ -122,6 +122,5 @@ bash /home/pi/PictureFrameBot/midori-settings.sh
 #### 2.4.4 Start at boot
 Autostart Midori at boot with Cron:  
 ```
-(crontab -l && echo "@reboot xinit /home/pi/PictureFrameBot/start_midori.sh &") | sudo crontab -
-
+(cat /etc/crontab && echo "@reboot pi xinit /home/pi/PictureFrameBot/start_midori.sh &") | sudo tee /etc/crontab
 ```
