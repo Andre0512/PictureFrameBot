@@ -6,6 +6,12 @@ import os
 import yaml
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
+import datetime
+
+
+def custom_str_constructor(loader, node):
+    return loader.construct_scalar(node).encode('utf-8')
+
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -45,18 +51,20 @@ def echo(bot, update):
 
 
 def receive_photo(bot, update):
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     photo_id = update.message.photo[-1].file_id
     photo_file = bot.getFile(photo_id)
-    photo_file.download()
-
+    photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
+    update.message.reply_text("Alles klar, Bild erhalten.")
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
+    yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
     cfg = get_yml("./config.yml")
-    strings = get_yml("language_strings/strings.yml")
+    strings = get_yml("./language_strings/strings.yml")
 
     updater = Updater(cfg['telegram']['token'])
 
