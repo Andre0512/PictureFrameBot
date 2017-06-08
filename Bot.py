@@ -7,6 +7,7 @@ import yaml
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import datetime
+import Browser
 
 
 def custom_str_constructor(loader, node):
@@ -49,13 +50,17 @@ def start(bot, update):
 def echo(bot, update):
     update.message.reply_text(update.message.text)
 
+def slideshow(bot, update):
+    Browser.main()
+    update.message.reply_text(strings['start_show'] + ' 😁')
+
 
 def receive_photo(bot, update):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     photo_id = update.message.photo[-1].file_id
     photo_file = bot.getFile(photo_id)
     photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
-    update.message.reply_text("Alles klar, Bild erhalten.")
+    update.message.reply_text(strings["received"] + ' 🙂')
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
@@ -64,12 +69,14 @@ def error(bot, update, error):
 def main():
     yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
     cfg = get_yml("./config.yml")
+    global strings
     strings = get_yml("./language_strings/strings.yml")
 
     updater = Updater(cfg['telegram']['token'])
 
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("exec", slideshow))
 
     dp.add_handler(MessageHandler(Filters.text, echo))
     dp.add_handler(MessageHandler(Filters.photo, receive_photo))

@@ -7,11 +7,17 @@ import subprocess
 import os
 import time
 
+
+def read_images():
+    folder = os.path.join(os.path.dirname(__file__), "pictures/")
+    folder_list = os.listdir(folder)
+    folder_list = [folder + file for file in folder_list]
+    return folder_list
+
+
 def insert_images(html):
     image_list = []
-    link_list = ["https://ifsstech.files.wordpress.com/2008/10/169.jpg",
-                 "https://designshack.net/wp-content/uploads/16-9.jpg",
-                 "https://upload.wikimedia.org/wikipedia/commons/7/7c/Aspect_ratio_16_9_example.jpg"]
+    link_list = read_images()
     delay_time = 1000
     for image in link_list:
         image_list.append('<img class ="mySlides" src="' + image + '" style="width:100%">')
@@ -34,7 +40,7 @@ def read_file(html_in_file):
 
 
 def open_linux(html_file):
-    fscreen = "./Fullscreen"
+    fscreen = os.path.join(os.path.dirname(__file__), "./Fullscreen")
     first = False
     if not os.path.isfile(fscreen):
         first = True
@@ -50,8 +56,8 @@ def open_linux(html_file):
 
 
 def main():
-    html_in_file = 'std_form.html'
-    html_out_file = 'test.html'
+    html_in_file = os.path.join(os.path.dirname(__file__), 'std_form.html')
+    html_out_file = os.path.join(os.path.dirname(__file__), 'slideshow.html')
 
     html = read_file(html_in_file)
     html = insert_images(html)
