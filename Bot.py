@@ -3,6 +3,7 @@
 #
 import os
 
+import sqlite3
 import yaml
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
@@ -18,6 +19,19 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+
+def createDB():
+    fd = open(os.path.join(os.path.dirname(__file__), 'create.sql'), 'r')
+    sqlFile = fd.read()
+    fd.close()
+
+    sqlCommands = sqlFile.split(';')
+    conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'database.db'))
+    c = conn.cursor()
+    for command in sqlCommands:
+        c.execute(command)
+    conn.close()
 
 
 def get_yml(file):
@@ -50,6 +64,7 @@ def start(bot, update):
 def echo(bot, update):
     update.message.reply_text(update.message.text)
 
+
 def slideshow(bot, update):
     Browser.main()
     update.message.reply_text(strings['start_show'] + ' 😁')
@@ -62,15 +77,21 @@ def receive_photo(bot, update):
     photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
     update.message.reply_text(strings["received"] + ' 🙂')
 
+
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
+    print(str(int(False)))
     yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
     cfg = get_yml("./config.yml")
     global strings
     strings = get_yml("./language_strings/strings.yml")
+
+    if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'presence.db')):
+        print("")
+        createDB()
 
     updater = Updater(cfg['telegram']['token'])
 
