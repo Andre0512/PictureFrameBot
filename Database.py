@@ -17,7 +17,7 @@ class Get:
         self.cur = self.con.cursor()
 
     def check_account(self, update):
-        self.con.execute("SELECT * FROM users WHERE user_id LIKE " + str(update.message.from_user.id) + ";")
+        self.con.execute("SELECT * FROM users WHERE user_id=" + str(update.message.from_user.id) + ";")
         l = len(self.cur.fetchall())
         if l == 0:
             return False
@@ -45,11 +45,11 @@ class Set:
 
     def insert_slideshow(self, user_id):
         max_id = self.__slideshow_max_id()
-        name = "Slideshow " + str(max_id)
+        name = "Slideshow " + str(max_id + 1)
         query = "INSERT INTO slideshows(user_id,name) VALUES (?, ?);"
         self.cur.execute(query, (user_id, name))
         self.con.commit()
-        return max_id
+        return [max_id, name]
 
     def insert_pictures(self, user_id, slide_id, name):
         query = "INSERT INTO pictures(user_id, slide_id, name) VALUES (?, ?, ?);"

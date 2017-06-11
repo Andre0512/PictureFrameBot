@@ -1,3 +1,6 @@
 start_show: Diashow wird gestartet
 received: Bild erhalten!\nSende ein weiteres oder benutze /exec um eine Diashow zu starten
 create_db: Datenbank wird erstellt...
+create_slideshow: Diashow erstellen
+complete: Diashow fertigstellen
+creating: Okay! @name wird erstellt\nBitte sende mir Fotos

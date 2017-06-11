@@ -1,3 +1,6 @@
 start_show: Starting slide show
 received: Ok, picture received!\nSend another or use /exec to start the slideshow
 create_db: Creating database...
+create_slideshow: Create slideshow
+complete: Complete slideshow
+creating: Okay! @name is created. \nPlease send photos

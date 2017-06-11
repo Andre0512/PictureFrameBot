@@ -4,10 +4,10 @@
 
 import os
 import sqlite3
-
 import sys
 import yaml
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 import logging
 import datetime
 import Browser
@@ -61,15 +61,29 @@ def dict_byte_to_str(v):
 
 
 def start(bot, update):
-    update.message.reply_text('Hi!')
+    reply_markup = ReplyKeyboardMarkup([["➕ " + strings['create_slideshow']]])
+    update.message.reply_text('Hi ' + update.message.from_user.first_name + " ✌🏻", reply_markup=reply_markup)
     db_out = Database.Set()
     db_in = Database.Get()
     if not db_in.check_account(update):
         db_out.insert_account(update)
 
 
-def echo(bot, update):
-    update.message.reply_text(update.message.text)
+def echo(bot, update, chat_data):
+    if update.message.text == "➕ " + strings['create_slideshow']:
+        name = create_slideshow(update, chat_data)
+        reply_text = strings['creating'] + " 😊"
+        reply_text = reply_text.replace("@name",name)
+        update.message.reply_text(reply_text)
+    else:
+        update.message.reply_text(update.message.text)
+
+
+def create_slideshow(update, chat_data):
+    db = Database.Set()
+    user_id = update.message.from_user.id
+    chat_data['slide_id'], slide_name = db.insert_slideshow(user_id)
+    return slide_name
 
 
 def slideshow(bot, update):
@@ -77,21 +91,26 @@ def slideshow(bot, update):
     update.message.reply_text(strings['start_show'] + ' 😁')
 
 
-def receive_photo(bot, update):
+def receive_photo(bot, update, chat_data):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     photo_id = update.message.photo[-1].file_id
     photo_file = bot.getFile(photo_id)
     photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
-    update.message.reply_text(strings["received"] + ' 🙂')
+    keyboard = [[InlineKeyboardButton(strings['complete'] + " ✔", callback_data='complete')]]
+    update.message.reply_text(strings["received"] + ' 🙂', reply_markup=InlineKeyboardMarkup(keyboard))
     db = Database.Set()
-    user_id = update.message.from_user.id
-    slide_id = db.insert_slideshow(user_id)
-    db.insert_pictures(user_id, slide_id, timestamp + '.jpg')
+    db.insert_pictures(update.message.from_user.id, chat_data['slide_id'], timestamp + '.jpg')
 
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
+
+def button(bot, update, chat_data):
+    update.callback_query.answer()
+    if update.callback_query.data == "complete":
+        update.callback_query.message.edit_text("x")
+        del chat_data
 
 def main():
     yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
@@ -112,8 +131,9 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("exec", slideshow))
 
-    dp.add_handler(MessageHandler(Filters.text, echo))
-    dp.add_handler(MessageHandler(Filters.photo, receive_photo))
+    dp.add_handler(MessageHandler(Filters.text, echo, pass_chat_data=True))
+    dp.add_handler(MessageHandler(Filters.photo, receive_photo, pass_chat_data=True))
+    dp.add_handler(CallbackQueryHandler(button, pass_chat_data=True))
     dp.add_error_handler(error)
 
     updater.start_polling()
