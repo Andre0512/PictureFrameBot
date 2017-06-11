@@ -84,7 +84,9 @@ def receive_photo(bot, update):
     photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
     update.message.reply_text(strings["received"] + ' 🙂')
     db = Database.Set()
-    db.insert_slideshow(update.message.from_user.id)
+    user_id = update.message.from_user.id
+    slide_id = db.insert_slideshow(user_id)
+    db.insert_pictures(user_id, slide_id, timestamp + '.jpg')
 
 
 def error(bot, update, error):
