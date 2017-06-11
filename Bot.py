@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def createDB():
-    fd = open(os.path.join(os.path.dirname(__file__), 'create.sql'), 'r')
+    fd = open(os.path.join(os.path.dirname(__file__), 'Create.sql'), 'r')
     sqlFile = fd.read()
     fd.close()
 
@@ -88,14 +88,13 @@ def error(bot, update, error):
 
 
 def main():
-    print(str(int(False)))
     yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
     cfg = get_yml("./config.yml")
     global strings
     strings = get_yml("./language_strings/strings.yml")
 
     if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'database.db')):
-        print("")
+        print(strings['create_db'])
         createDB()
 
     updater = Updater(cfg['telegram']['token'])
