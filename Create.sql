@@ -3,6 +3,7 @@ CREATE TABLE users (
 	username varchar(50),
 	first_name varchar(50) NOT NULL,
 	last_name varchar(50),
+	language varchar(20),
 	registed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(user_id)
 );

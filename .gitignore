@@ -1,5 +1,6 @@
 .idea/
 pictures/
+__pycache__/
 test.html
 slideshow.html
 Fullscreen

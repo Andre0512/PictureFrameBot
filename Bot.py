@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-import os
 
+import os
 import sqlite3
 import yaml
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import datetime
 import Browser
+import Database
 
 
 def custom_str_constructor(loader, node):
@@ -59,6 +60,10 @@ def dict_byte_to_str(v):
 
 def start(bot, update):
     update.message.reply_text('Hi!')
+    db_out = Database.Set()
+    db_in = Database.Get()
+    if not db_in.check_account(update):
+        db_out.insert_account(update)
 
 
 def echo(bot, update):
@@ -89,7 +94,7 @@ def main():
     global strings
     strings = get_yml("./language_strings/strings.yml")
 
-    if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'presence.db')):
+    if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'database.db')):
         print("")
         createDB()
 
