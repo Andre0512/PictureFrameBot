@@ -122,5 +122,5 @@ bash /home/pi/PictureFrameBot/midori-settings.sh
 #### 2.4.4 Start at boot
 Autostart Midori at boot with Cron:  
 ```
-(cat /etc/crontab && echo "@reboot pi xinit /home/pi/PictureFrameBot/start_midori.sh &") | sudo tee /etc/crontab
+(cat /etc/crontab && echo "@reboot root xinit /home/pi/PictureFrameBot/start_midori.sh &") | sudo tee /etc/crontab
 ```

@@ -4,6 +4,8 @@
 
 import os
 import sqlite3
+
+import sys
 import yaml
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
@@ -96,6 +98,9 @@ def main():
     if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'database.db')):
         print(strings['create_db'])
         createDB()
+
+    if sys.argv[1:] and sys.argv[1:][0] == 'ssh':
+        os.environ["DISPLAY"] = ":0"
 
     updater = Updater(cfg['telegram']['token'])
 

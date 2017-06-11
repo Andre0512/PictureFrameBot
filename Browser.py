@@ -40,19 +40,9 @@ def read_file(html_in_file):
 
 
 def open_linux(html_file):
-    fscreen = os.path.join(os.path.dirname(__file__), "./Fullscreen")
-    first = False
-    if not os.path.isfile(fscreen):
-        first = True
-        os.environ["DISPLAY"] = ":0"
-
     webbrowser.register('midori', None, webbrowser.BackgroundBrowser('/usr/bin/midori'))
     browser = webbrowser.get('midori')
     browser.open(html_file)
-    if first:
-        open(fscreen, 'a').close()
-        time.sleep(5)
-        subprocess.call('xte "key F11" -x:0', shell=True)
 
 
 def main():
