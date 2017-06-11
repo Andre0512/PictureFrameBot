@@ -38,5 +38,16 @@ class Set:
         self.cur.execute(query, (user.id, user.first_name, user.last_name, user.username, user.language_code))
         self.con.commit()
 
+    def __slideshow_max_id(self):
+        self.con.execute("SELECT MAX(.rowid) FROM slideshows;")
+        max_id = [item[0] for item in self.cur.fetchall()]
+        return max_id[0]
+
+    def insert_slideshow(self, user_id):
+        name = "Slideshow" + self.__slideshow_max_id()
+        query = "INSERT INTO slideshows(user_id,name) VALUES (?, ?);"
+        self.cur.execute(query, (user_id, name))
+        self.con.commit()
+
     def __del__(self):
         self.con.close()
