@@ -6,7 +6,7 @@ import os
 import sqlite3
 import sys
 import yaml
-from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 import logging
 import datetime
@@ -73,7 +73,7 @@ def echo(bot, update, chat_data):
     if update.message.text == "➕ " + strings['create_slideshow']:
         name = create_slideshow(update, chat_data)
         reply_text = strings['creating'] + " 😊"
-        reply_text = reply_text.replace("@name",name)
+        reply_text = reply_text.replace("@name", name)
         update.message.reply_text(reply_text)
     else:
         update.message.reply_text(update.message.text)
@@ -109,8 +109,14 @@ def error(bot, update, error):
 def button(bot, update, chat_data):
     update.callback_query.answer()
     if update.callback_query.data == "complete":
-        update.callback_query.message.edit_text("x")
-        del chat_data
+        db = Database.Get()
+        name, number = db.check_slideshow(chat_data['slide_id'])
+        reply_text = strings['created'] + " 😁"
+        reply_text = reply_text.replace("x@name", "*" + name + "*")
+        reply_text = reply_text.replace("@photo", "*" + str(number) + "*")
+        update.callback_query.message.edit_text(reply_text, parse_mode=ParseMode.MARKDOWN)
+        del chat_data['slide_id']
+
 
 def main():
     yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)

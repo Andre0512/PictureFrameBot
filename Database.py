@@ -4,11 +4,6 @@
 
 import os
 import sqlite3
-import yaml
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import logging
-import datetime
-import Browser
 
 
 class Get:
@@ -17,11 +12,18 @@ class Get:
         self.cur = self.con.cursor()
 
     def check_account(self, update):
-        self.con.execute("SELECT * FROM users WHERE user_id=" + str(update.message.from_user.id) + ";")
+        self.cur.execute("SELECT * FROM users WHERE user_id=" + str(update.message.from_user.id) + ";")
         l = len(self.cur.fetchall())
         if l == 0:
             return False
         return True
+
+    def check_slideshow(self, slide_id):
+        self.cur.execute(
+            "SELECT ss.name, COUNT(p.id) FROM slideshows ss INNER JOIN pictures p on ss.id=p.slide_id WHERE p.slide_id=" + str(
+                slide_id))
+        name, number = [[item[0], item[1]] for item in self.cur.fetchall()][0]
+        return [name, number]
 
     def __del__(self):
         self.con.close()
@@ -39,7 +41,7 @@ class Set:
         self.con.commit()
 
     def __slideshow_max_id(self):
-        self.con.execute("SELECT MAX(id) FROM slideshows;")
+        self.cur.execute("SELECT MAX(id) FROM slideshows;")
         max_id = [item[0] for item in self.cur.fetchall()]
         return max_id[0] if max_id else 0
 
