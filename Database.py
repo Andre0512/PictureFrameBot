@@ -57,8 +57,8 @@ class Set:
 
     def __slideshow_max_id(self):
         self.cur.execute("SELECT MAX(id) FROM slideshows;")
-        max_id = [item[0] for item in self.cur.fetchall()]
-        return max_id[0] if max_id else 0
+        max_id = [item[0] for item in self.cur.fetchall()][0]
+        return max_id if max_id is not None else 0
 
     def insert_slideshow(self, user_id):
         max_id = self.__slideshow_max_id()

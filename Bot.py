@@ -73,8 +73,8 @@ def echo(bot, update, chat_data):
     if update.message.text == "➕ " + strings['create_slideshow']:
         name = create_slideshow(update, chat_data)
         reply_text = strings['creating'] + " 😊"
-        reply_text = reply_text.replace("@name", name)
-        update.message.reply_text(reply_text)
+        reply_text = reply_text.replace("@name", '*' + name + '*')
+        update.message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
     elif update.message.text == "🌅 " + strings['slideshows']:
         db = Database.Get()
         slide_list = db.get_slides(update.message.from_user.id)
@@ -82,7 +82,7 @@ def echo(bot, update, chat_data):
         for slide in slide_list:
             keyboard.append(
                 [InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data="slide " + str(slide[3]))])
-        update.message.reply_text('list', reply_markup=InlineKeyboardMarkup(keyboard))
+        update.message.reply_text(strings['current_lists'] + ':', reply_markup=InlineKeyboardMarkup(keyboard))
     else:
         update.message.reply_text(update.message.text)
 
