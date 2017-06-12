@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 
+import time
 import os
 import sqlite3
 import sys
@@ -138,6 +139,10 @@ def main():
         print(strings['create_db'])
         createDB()
 
+    if sys.argv[1:] and sys.argv[1:][0] == 'cron':
+        #Script fails if no network is present and no connection can be established with the Telegram server.
+        #Therefore quick and dirty solution: short delay when script was started with cron
+        time.sleep(5)
     if sys.argv[1:] and sys.argv[1:][0] == 'ssh':
         os.environ["DISPLAY"] = ":0"
 

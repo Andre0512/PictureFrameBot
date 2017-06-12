@@ -7,5 +7,5 @@ rm -f /home/pi/PictureFrameBot/Fullscreen
 mkdir -p /home/pi/PictureFrameBot/pictures
 matchbox-window-manager &
 unclutter &
-python3 /home/pi/PictureFrameBot/Bot.py &
+python3 /home/pi/PictureFrameBot/Bot.py cron &
 midori -e Fullscreen
