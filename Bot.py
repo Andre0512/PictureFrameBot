@@ -80,7 +80,8 @@ def echo(bot, update, chat_data):
         slide_list = db.get_slides(update.message.from_user.id)
         keyboard = []
         for slide in slide_list:
-            keyboard.append([InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data=str(slide[3]))])
+            keyboard.append(
+                [InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data="slide " + str(slide[3]))])
         update.message.reply_text('list', reply_markup=InlineKeyboardMarkup(keyboard))
     else:
         update.message.reply_text(update.message.text)
@@ -93,8 +94,8 @@ def create_slideshow(update, chat_data):
     return slide_name
 
 
-def slideshow(bot, update, chat_data):
-    Browser.main(slide_id=chat_data['slide_id'])
+def slideshow(bot, update, slide_id):
+    Browser.main(slide_id=slide_id)
     update.message.reply_text(strings['start_show'] + ' 😁')
 
 
@@ -123,6 +124,8 @@ def button(bot, update, chat_data):
         reply_text = reply_text.replace("@photo", "*" + str(number) + "*")
         update.callback_query.message.edit_text(reply_text, parse_mode=ParseMode.MARKDOWN)
         del chat_data['slide_id']
+    if update.callback_query.data.split(" ")[0] == "slide":
+        slideshow(bot, update, update.callback_query.data.split(" ")[1])
 
 
 def main():

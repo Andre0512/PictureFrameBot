@@ -3,10 +3,8 @@
 #
 
 import webbrowser
-import subprocess
 import os
 import Database
-import time
 
 
 def read_images():
@@ -18,10 +16,12 @@ def read_images():
 
 def insert_images(html, slide_id):
     db = Database.Get()
-    image_list = db.get_pictures(slide_id)
-    link_list = read_images()
+    image_list = []
+    image_db_list = db.get_pictures(slide_id)
+    image_db_list = ['./pictures/' + image for image in image_db_list]
+    #link_list = read_images()
     delay_time = 1000
-    for image in link_list:
+    for image in image_db_list:
         image_list.append('<img class ="mySlides" src="' + image + '" style="width:100%">')
 
     html = html.replace("@IMAGES", '\n'.join(image_list))
@@ -52,7 +52,7 @@ def main(slide_id=0):
     html_out_file = os.path.join(os.path.dirname(__file__), 'slideshow.html')
 
     html = read_file(html_in_file)
-    html = insert_images(html)
+    html = insert_images(html, slide_id)
     write_file(html, html_out_file)
 
     if not os.name == 'nt':
