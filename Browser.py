@@ -5,6 +5,7 @@
 import webbrowser
 import subprocess
 import os
+import Database
 import time
 
 
@@ -15,8 +16,9 @@ def read_images():
     return folder_list
 
 
-def insert_images(html):
-    image_list = []
+def insert_images(html, slide_id):
+    db = Database.Get()
+    image_list = db.get_pictures(slide_id)
     link_list = read_images()
     delay_time = 1000
     for image in link_list:
@@ -45,7 +47,7 @@ def open_linux(html_file):
     browser.open(html_file)
 
 
-def main():
+def main(slide_id=0):
     html_in_file = os.path.join(os.path.dirname(__file__), 'std_form.html')
     html_out_file = os.path.join(os.path.dirname(__file__), 'slideshow.html')
 

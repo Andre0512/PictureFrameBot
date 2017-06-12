@@ -25,6 +25,21 @@ class Get:
         name, number = [[item[0], item[1]] for item in self.cur.fetchall()][0]
         return [name, number]
 
+    def get_pictures(self, slide_id):
+        self.cur.execute(
+            "SELECT p.name FROM  pictures p INNER JOIN slideshows ss  on ss.id=p.slide_id WHERE p.slide_id=" + str(
+                slide_id))
+        name = [item[0] for item in self.cur.fetchall()]
+        return name
+
+    def get_slides(self, user_id):
+        self.cur.execute(
+            "SELECT ss.name, ss.private, u.first_name, ss.id, (SELECT COUNT(id) FROM pictures WHERE slide_id = ss.id) "
+            "FROM pictures p LEFT JOIN slideshows ss ON ss.id=p.slide_id LEFT JOIN users u ON u.user_id=ss.user_id WHERE "
+            "ss.user_id=" + str(user_id) + " OR ss.private = 1 GROUP BY ss.id")
+        slide_shows = [[item[0], item[1], item[2], item[3], item[4]] for item in self.cur.fetchall()]
+        return slide_shows
+
     def __del__(self):
         self.con.close()
 

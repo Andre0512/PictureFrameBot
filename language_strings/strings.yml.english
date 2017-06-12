@@ -5,3 +5,4 @@ create_slideshow: Create slideshow
 complete: Complete slideshow
 creating: Okay! @name is created. \nPlease send photos
 created: x@name with @photo photos was created.
+slideshows: Slideshows

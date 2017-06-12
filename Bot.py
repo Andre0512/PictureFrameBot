@@ -61,7 +61,7 @@ def dict_byte_to_str(v):
 
 
 def start(bot, update):
-    reply_markup = ReplyKeyboardMarkup([["➕ " + strings['create_slideshow']]])
+    reply_markup = ReplyKeyboardMarkup([["➕ " + strings['create_slideshow']], ["🌅 " + strings['slideshows']]])
     update.message.reply_text('Hi ' + update.message.from_user.first_name + " ✌🏻", reply_markup=reply_markup)
     db_out = Database.Set()
     db_in = Database.Get()
@@ -75,6 +75,13 @@ def echo(bot, update, chat_data):
         reply_text = strings['creating'] + " 😊"
         reply_text = reply_text.replace("@name", name)
         update.message.reply_text(reply_text)
+    elif update.message.text == "🌅 " + strings['slideshows']:
+        db = Database.Get()
+        slide_list = db.get_slides(update.message.from_user.id)
+        keyboard = []
+        for slide in slide_list:
+            keyboard.append([InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data=str(slide[3]))])
+        update.message.reply_text('list', reply_markup=InlineKeyboardMarkup(keyboard))
     else:
         update.message.reply_text(update.message.text)
 
@@ -86,8 +93,8 @@ def create_slideshow(update, chat_data):
     return slide_name
 
 
-def slideshow(bot, update):
-    Browser.main()
+def slideshow(bot, update, chat_data):
+    Browser.main(slide_id=chat_data['slide_id'])
     update.message.reply_text(strings['start_show'] + ' 😁')
 
 
@@ -135,7 +142,7 @@ def main():
 
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("exec", slideshow))
+    dp.add_handler(CommandHandler("exec", slideshow, pass_chat_data=True))
 
     dp.add_handler(MessageHandler(Filters.text, echo, pass_chat_data=True))
     dp.add_handler(MessageHandler(Filters.photo, receive_photo, pass_chat_data=True))
