@@ -3,7 +3,11 @@ received: Bild erhalten!\nSende ein weiteres oder benutze /exec um eine Diashow 
 create_db: Datenbank wird erstellt...
 create_slideshow: Diashow erstellen
 complete: Diashow fertigstellen
-creating: Okay! @name wird erstellt\nBitte sende mir Fotos
+creating: Okay! @name wird erstellt
+send_action: Bitte sende mir Fotos
 created: x@name mit @photo Fotos wurde erstellt.
 slideshows: Diashows
 current_lists: Das hier sind deine derzeitigen Diashows
+add: Fotos hinzufügen
+rename: Diashow umbenennen
+rename_action: Wie soll die Diashow heißen?

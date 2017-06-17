@@ -7,7 +7,7 @@ import os
 import sqlite3
 import sys
 import yaml
-from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
+from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 import logging
 import datetime
@@ -71,21 +71,29 @@ def start(bot, update):
 
 
 def echo(bot, update, chat_data):
-    if update.message.text == "➕ " + strings['create_slideshow']:
-        name = create_slideshow(update, chat_data)
-        reply_text = strings['creating'] + " 😊"
-        reply_text = reply_text.replace("@name", '*' + name + '*')
-        update.message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
-    elif update.message.text == "🌅 " + strings['slideshows']:
-        db = Database.Get()
-        slide_list = db.get_slides(update.message.from_user.id)
-        keyboard = []
-        for slide in slide_list:
-            keyboard.append(
-                [InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data="slide " + str(slide[3]))])
-        update.message.reply_text(strings['current_lists'] + ':', reply_markup=InlineKeyboardMarkup(keyboard))
+    if update.message.reply_to_message:
+        if update.message.reply_to_message.text == strings['rename_action']:
+            db = Database.Set()
+            db.update_slideshow_name(chat_data['slide_id'], update.message.text)
+            update.message.reply_text("Update")
     else:
-        update.message.reply_text(update.message.text)
+        if update.message.text == "➕ " + strings['create_slideshow']:
+            name = create_slideshow(update, chat_data)
+            reply_text = strings['creating'] + " 😊"
+            reply_text = reply_text.replace("@name", '*' + name + '*')
+            keyb = [[InlineKeyboardButton("✏️ " + strings['rename'], callback_data='rename ' + str(chat_data['slide_id']))]]
+            keyb.append([InlineKeyboardButton("➕ " + strings['add'], callback_data='add ' + str(chat_data['slide_id']))])
+            update.message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(keyb))
+        elif update.message.text == "🌅 " + strings['slideshows']:
+            db = Database.Get()
+            slide_list = db.get_slides(update.message.from_user.id)
+            keyboard = []
+            for slide in slide_list:
+                keyboard.append(
+                    [InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data="slide " + str(slide[3]))])
+            update.message.reply_text(strings['current_lists'] + ':', reply_markup=InlineKeyboardMarkup(keyboard))
+        else:
+            update.message.reply_text(update.message.text)
 
 
 def create_slideshow(update, chat_data):
@@ -97,11 +105,11 @@ def create_slideshow(update, chat_data):
 
 def slideshow(bot, update, slide_id):
     Browser.main(slide_id=slide_id)
-    update.message.reply_text(strings['start_show'] + ' 😁')
+    update.callback_query.message.reply_text(strings['start_show'] + ' 😁')
 
 
 def receive_photo(bot, update, chat_data):
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S.%f")
     photo_id = update.message.photo[-1].file_id
     photo_file = bot.getFile(photo_id)
     photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
@@ -125,7 +133,11 @@ def button(bot, update, chat_data):
         reply_text = reply_text.replace("@photo", "*" + str(number) + "*")
         update.callback_query.message.edit_text(reply_text, parse_mode=ParseMode.MARKDOWN)
         del chat_data['slide_id']
-    if update.callback_query.data.split(" ")[0] == "slide":
+    elif update.callback_query.data.split(" ")[0] == "rename":
+        update.callback_query.message.reply_text(strings["rename_action"], reply_markup=ForceReply())
+    elif update.callback_query.data.split(" ")[0] == "add":
+        update.callback_query.message.reply_text(strings["send_action"])
+    elif update.callback_query.data.split(" ")[0] == "slide":
         slideshow(bot, update, update.callback_query.data.split(" ")[1])
 
 
@@ -140,8 +152,8 @@ def main():
         createDB()
 
     if sys.argv[1:] and sys.argv[1:][0] == 'cron':
-        #Script fails if no network is present and no connection can be established with the Telegram server.
-        #Therefore quick and dirty solution: short delay when script was started with cron
+        # Script fails if no network is present and no connection can be established with the Telegram server.
+        # Therefore quick and dirty solution: short delay when script was started with cron
         time.sleep(5)
     if sys.argv[1:] and sys.argv[1:][0] == 'ssh':
         os.environ["DISPLAY"] = ":0"
@@ -154,7 +166,6 @@ def main():
 
     dp.add_handler(MessageHandler(Filters.text, echo, pass_chat_data=True))
     dp.add_handler(MessageHandler(Filters.photo, receive_photo, pass_chat_data=True))
-    dp.add_handler(CallbackQueryHandler(button, pass_chat_data=True))
     dp.add_error_handler(error)
 
     updater.start_polling()

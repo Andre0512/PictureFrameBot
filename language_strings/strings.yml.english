@@ -3,7 +3,11 @@ received: Ok, picture received!\nSend another or use /exec to start the slidesho
 create_db: Creating database...
 create_slideshow: Create slideshow
 complete: Complete slideshow
-creating: Okay! @name is created. \nPlease send photos
+creating: Okay! @name is created.
+send_action: Please send photos
 created: x@name with @photo photos was created.
 slideshows: Slideshows
 current_lists: Here are your current slideshows
+add: Add pictures
+rename: Rename Slideshow
+rename_action: What new name do you want to give this slideshow?

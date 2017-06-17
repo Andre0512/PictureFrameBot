@@ -73,5 +73,10 @@ class Set:
         self.cur.execute(query, (user_id, slide_id, name))
         self.con.commit()
 
+    def update_slideshow_name(self, slide_id, name):
+        query = "UPDATE slideshows SET name=? WHERE id=" + str(slide_id)
+        self.cur.execute(query, (name,))
+        self.con.commit()
+
     def __del__(self):
         self.con.close()
