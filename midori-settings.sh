@@ -12,7 +12,7 @@ last-window-width=1920
 last-window-height=1080
 last-panel-position=254
 load-on-startup=MIDORI_STARTUP_HOMEPAGE
-homepage=file:///home/pi/PictureFrameBot/startpage.html
+homepage=file:///home/pi/PictureFrameBot/html/startpage.html
 location-entry-search=https://duckduckgo.com/?q=%s
 open-new-pages-in=MIDORI_NEW_PAGE_CURRENT
 open-tabs-next-to-current=false

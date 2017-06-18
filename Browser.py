@@ -8,7 +8,7 @@ import Database
 
 
 def read_images():
-    folder = os.path.join(os.path.dirname(__file__), "pictures/")
+    folder = os.path.join(os.path.dirname(__file__), "./html/pictures/")
     folder_list = os.listdir(folder)
     folder_list = [folder + file for file in folder_list]
     return folder_list
@@ -48,8 +48,8 @@ def open_linux(html_file):
 
 
 def main(slide_id=0):
-    html_in_file = os.path.join(os.path.dirname(__file__), 'std_form.html')
-    html_out_file = os.path.join(os.path.dirname(__file__), 'slideshow.html')
+    html_in_file = os.path.join(os.path.dirname(__file__), './html/std_form.html')
+    html_out_file = os.path.join(os.path.dirname(__file__), './html/slideshow.html')
 
     html = read_file(html_in_file)
     html = insert_images(html, slide_id)

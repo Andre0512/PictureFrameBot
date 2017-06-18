@@ -112,7 +112,7 @@ def receive_photo(bot, update, chat_data):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S.%f")
     photo_id = update.message.photo[-1].file_id
     photo_file = bot.getFile(photo_id)
-    photo_file.download(os.path.join(os.path.dirname(__file__), "pictures/" + timestamp + ".jpg"))
+    photo_file.download(os.path.join(os.path.dirname(__file__), "./html/pictures/" + timestamp + ".jpg"))
     keyboard = [[InlineKeyboardButton(strings['complete'] + " ✔", callback_data='complete')]]
     update.message.reply_text(strings["received"] + ' 🙂', reply_markup=InlineKeyboardMarkup(keyboard))
     db = Database.Set()
@@ -166,6 +166,7 @@ def main():
 
     dp.add_handler(MessageHandler(Filters.text, echo, pass_chat_data=True))
     dp.add_handler(MessageHandler(Filters.photo, receive_photo, pass_chat_data=True))
+    dp.add_handler(CallbackQueryHandler(button, pass_chat_data=True))
     dp.add_error_handler(error)
 
     updater.start_polling()

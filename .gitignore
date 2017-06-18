@@ -1,8 +1,7 @@
 .idea/
-pictures/
+html/pictures/
 __pycache__/
-test.html
-slideshow.html
+html/slideshow.html
 Fullscreen
 config.yml
 strings.yml

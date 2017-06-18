@@ -4,7 +4,7 @@ xset -dpms
 xset s off
 xset s noblank
 rm -f /home/pi/PictureFrameBot/Fullscreen
-mkdir -p /home/pi/PictureFrameBot/pictures
+mkdir -p /home/pi/PictureFrameBot/html/pictures
 matchbox-window-manager &
 unclutter &
 python3 /home/pi/PictureFrameBot/Bot.py cron &
