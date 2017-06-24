@@ -70,7 +70,38 @@ def start(bot, update):
         db_out.insert_account(update)
 
 
-def echo(bot, update, chat_data):
+def get_std_keyboard(chat_data):
+    keyboard = [[InlineKeyboardButton("✏️ " + strings['rename'], callback_data='rename ' + str(chat_data['slide_id']))],
+                [InlineKeyboardButton("➕ " + strings['add'], callback_data='add ' + str(chat_data['slide_id']))]]
+    return InlineKeyboardMarkup(keyboard)
+
+
+def get_creation_text(name):
+    reply_text = strings['creating'] + " 😊"
+    reply_text = reply_text.replace("@name", '*' + name + '*')
+    return reply_text
+
+
+def get_slideshow_keyboard():
+    db = Database.Get()
+    slide_list = db.get_slides(update.message.from_user.id)
+    keyboard = []
+    for slide in slide_list:
+        keyboard.append(
+            [InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data="slide " + str(slide[3]))])
+    return InlineKeyboardMarkup(keyboard)
+
+
+def get_slide_data(slide_id):
+    db = Database.Get()
+    name, number = db.check_slideshow(slide_id)
+    reply_text = strings['created'] + " 😁"
+    reply_text = reply_text.replace("x@name", "*" + name + "*")
+    reply_text = reply_text.replace("@photo", "*" + str(number) + "*")
+    return reply_text
+
+
+def reply(bot, update, chat_data):
     if update.message.reply_to_message:
         if update.message.reply_to_message.text == strings['rename_action']:
             db = Database.Set()
@@ -79,21 +110,12 @@ def echo(bot, update, chat_data):
     else:
         if update.message.text == "➕ " + strings['create_slideshow']:
             name = create_slideshow(update, chat_data)
-            reply_text = strings['creating'] + " 😊"
-            reply_text = reply_text.replace("@name", '*' + name + '*')
-            keyb = [[InlineKeyboardButton("✏️ " + strings['rename'], callback_data='rename ' + str(chat_data['slide_id']))]]
-            keyb.append([InlineKeyboardButton("➕ " + strings['add'], callback_data='add ' + str(chat_data['slide_id']))])
-            update.message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(keyb))
+            update.message.reply_text(get_creation_text(name), parse_mode=ParseMode.MARKDOWN,
+                                      reply_markup=get_std_keyboard(chat_data))
         elif update.message.text == "🌅 " + strings['slideshows']:
-            db = Database.Get()
-            slide_list = db.get_slides(update.message.from_user.id)
-            keyboard = []
-            for slide in slide_list:
-                keyboard.append(
-                    [InlineKeyboardButton(slide[0] + " (" + str(slide[4]) + ")", callback_data="slide " + str(slide[3]))])
-            update.message.reply_text(strings['current_lists'] + ':', reply_markup=InlineKeyboardMarkup(keyboard))
+            update.message.reply_text(strings['current_lists'] + ':', reply_markup=get_slideshow_keyboard())
         else:
-            update.message.reply_text(update.message.text)
+            start(bot, update)
 
 
 def create_slideshow(update, chat_data):
@@ -126,12 +148,7 @@ def error(bot, update, error):
 def button(bot, update, chat_data):
     update.callback_query.answer()
     if update.callback_query.data == "complete":
-        db = Database.Get()
-        name, number = db.check_slideshow(chat_data['slide_id'])
-        reply_text = strings['created'] + " 😁"
-        reply_text = reply_text.replace("x@name", "*" + name + "*")
-        reply_text = reply_text.replace("@photo", "*" + str(number) + "*")
-        update.callback_query.message.edit_text(reply_text, parse_mode=ParseMode.MARKDOWN)
+        update.callback_query.message.edit_text(get_slide_data(chat_data['slide_id']), parse_mode=ParseMode.MARKDOWN)
         del chat_data['slide_id']
     elif update.callback_query.data.split(" ")[0] == "rename":
         update.callback_query.message.reply_text(strings["rename_action"], reply_markup=ForceReply())
@@ -164,7 +181,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("exec", slideshow, pass_chat_data=True))
 
-    dp.add_handler(MessageHandler(Filters.text, echo, pass_chat_data=True))
+    dp.add_handler(MessageHandler(Filters.text, reply, pass_chat_data=True))
     dp.add_handler(MessageHandler(Filters.photo, receive_photo, pass_chat_data=True))
     dp.add_handler(CallbackQueryHandler(button, pass_chat_data=True))
     dp.add_error_handler(error)
