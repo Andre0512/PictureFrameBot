@@ -20,9 +20,9 @@ def insert_images(html, slide_id):
     image_db_list = db.get_pictures(slide_id)
     image_db_list = ['./pictures/' + image for image in image_db_list]
     #link_list = read_images()
-    delay_time = 1000
+    delay_time = 5000
     for image in image_db_list:
-        image_list.append('<img class ="mySlides" src="' + image + '" style="width:100%">')
+        image_list.append('<img class ="mySlides animate-right" src="' + image + '" style="width:100%">')
 
     html = html.replace("@IMAGES", '\n'.join(image_list))
     html = html.replace("@DELAY", str(delay_time))

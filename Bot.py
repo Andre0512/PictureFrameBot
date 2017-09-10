@@ -25,15 +25,15 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def createDB():
+def create_db():
     fd = open(os.path.join(os.path.dirname(__file__), 'Create.sql'), 'r')
-    sqlFile = fd.read()
+    sql_file = fd.read()
     fd.close()
 
-    sqlCommands = sqlFile.split(';')
+    sql_commands = sql_file.split(';')
     conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), 'database.db'))
     c = conn.cursor()
-    for command in sqlCommands:
+    for command in sql_commands:
         c.execute(command)
     conn.close()
 
@@ -82,9 +82,9 @@ def get_creation_text(name):
     return reply_text
 
 
-def get_slideshow_keyboard():
+def get_slideshow_keyboard(user_id):
     db = Database.Get()
-    slide_list = db.get_slides(update.message.from_user.id)
+    slide_list = db.get_slides(user_id)
     keyboard = []
     for slide in slide_list:
         keyboard.append(
@@ -113,7 +113,8 @@ def reply(bot, update, chat_data):
             update.message.reply_text(get_creation_text(name), parse_mode=ParseMode.MARKDOWN,
                                       reply_markup=get_std_keyboard(chat_data))
         elif update.message.text == "🌅 " + strings['slideshows']:
-            update.message.reply_text(strings['current_lists'] + ':', reply_markup=get_slideshow_keyboard())
+            update.message.reply_text(strings['current_lists'] + ':',
+                                      reply_markup=get_slideshow_keyboard(update.message.from_user.id))
         else:
             start(bot, update)
 
@@ -142,7 +143,7 @@ def receive_photo(bot, update, chat_data):
 
 
 def error(bot, update, error):
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
+    logger.warning('Update "%s" caused error "%s"' % (update, error))
 
 
 def button(bot, update, chat_data):
@@ -166,7 +167,7 @@ def main():
 
     if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'database.db')):
         print(strings['create_db'])
-        createDB()
+        create_db()
 
     if sys.argv[1:] and sys.argv[1:][0] == 'cron':
         # Script fails if no network is present and no connection can be established with the Telegram server.
