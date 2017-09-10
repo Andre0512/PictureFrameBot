@@ -116,7 +116,7 @@ sudo apt-get install midori unclutter matchbox xautomation
 #### 2.4.3 Update browser setting
 Execute this script to change the Midori settings:
 ```
-bash /home/pi/PictureFrameBot/midori-settings.sh
+sudo bash /home/pi/PictureFrameBot/midori-settings.sh
 ```
 
 #### 2.4.4 Start at boot

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-pidir="/home/pi/.config/midori/config"
-rootdir="/root/.config/midori/config"
+pidir="/home/pi/.config/midori"
+rootdir="/root/.config/midori"
 
 setting=$(cat << 'EOF'
 [settings]
@@ -23,6 +23,9 @@ EOF
 )
 
 
-mkdir -p /home/pi/.config/midori
-echo "$setting" > "$pidir"
-echo "$setting" > "$rootdir"
+
+mkdir -p "$pidir" 
+mkdir -p "$rootdir" 
+
+echo "$setting" > "${pidir}/config"
+echo "$setting" > "${rootdir}/config"
