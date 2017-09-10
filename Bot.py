@@ -126,9 +126,10 @@ def create_slideshow(update, chat_data):
     return slide_name
 
 
-def slideshow(bot, update, slide_id):
+def slideshow(bot, update, chat_data):
+    slide_id = chat_data['slide_id'] if 'slide_id' in chat_data else 0
     Browser.main(slide_id=slide_id)
-    update.callback_query.message.reply_text(strings['start_show'] + ' 😁')
+    update.message.reply_text(strings['start_show'] + ' 😁')
 
 
 def receive_photo(bot, update, chat_data):
@@ -156,7 +157,8 @@ def button(bot, update, chat_data):
     elif update.callback_query.data.split(" ")[0] == "add":
         update.callback_query.message.reply_text(strings["send_action"])
     elif update.callback_query.data.split(" ")[0] == "slide":
-        slideshow(bot, update, update.callback_query.data.split(" ")[1])
+        chat_data['slide_id'] = update.callback_query.data.split(" ")[1]
+        slideshow(bot, update.callback_query, chat_data)
 
 
 def main():
